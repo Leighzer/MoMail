@@ -10,8 +10,7 @@ namespace MoMail
     /// </summary>
     public class SendResult
     {
-        public bool IsSuccess { get; set; }
-        public int AttemptsRequired { get{ return Attempts.Count; } }
+        public bool IsSuccess { get; set; }        
         public DateTime DateAttempted { get; set; }
         public DateTime? DateSent { get; set; }        
         public List<SendAttempt> Attempts { get; set; } = new List<SendAttempt>();
