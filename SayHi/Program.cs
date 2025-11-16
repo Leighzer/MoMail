@@ -1,11 +1,10 @@
 ﻿using MoMail;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace SayHi
 {
@@ -15,14 +14,14 @@ namespace SayHi
 
         public static void Main(string[] args)
         {
-            string emailArg = args.Count() >= 1 ? args[0] : "";
+            string emailArg = args.Count() >= 1 ? args[0] : string.Empty;
             try
             {
                 MailAddress emailAddress = new MailAddress(emailArg);
                 using (StreamReader r = new StreamReader(emailConfigFileName))
                 {
                     string emailConfigJson = r.ReadToEnd();
-                    EmailConfig emailConfig = JsonConvert.DeserializeObject<EmailConfig>(emailConfigJson);
+                    EmailConfig emailConfig = JsonSerializer.Deserialize<EmailConfig>(emailConfigJson);
                     Emailer emailer = new Emailer(emailConfig);
 
                     var result = emailer.SendEmail(
@@ -48,15 +47,15 @@ namespace SayHi
                         Console.WriteLine($"Attempt start {result.DateAttempted}");
                         Console.WriteLine($"Attempts made {result.Attempts.Count}");
                         Console.WriteLine($"Error note {result.ErrorNote}");
-                        if (result.Exception != null)
+                        if (result.Exception is not null)
                         {
                             Console.WriteLine($"{result.Exception.Message}");
                             Console.WriteLine($"{result.Exception.StackTrace}");
                         }
                     }
-                }   
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine($"Email send unsuccessful!");
                 Console.WriteLine($"{e.Message}");

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net.Mail;
 using System.Net;
-using System.Linq;
+using System.Net.Mail;
 
 namespace MoMail
 {
@@ -54,11 +52,11 @@ namespace MoMail
                     outgoingMessage.ReplyToList.Add(new MailAddress(replyTo[j]));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new SendResult()
                 {
-                    IsSuccess = false,                    
+                    IsSuccess = false,
                     DateAttempted = DateTime.Now,
                     Exception = ex,
                     ErrorNote = "Failure to initialize mail message."
@@ -71,7 +69,7 @@ namespace MoMail
             {
                 smtpClient = GetSmtpClient();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new SendResult()
                 {
@@ -86,13 +84,13 @@ namespace MoMail
             SendResult sendResult = new SendResult()
             {
                 IsSuccess = false,
-                DateAttempted = DateTime.Now,                
+                DateAttempted = DateTime.Now,
             };
-            for(int i = 0; i < config.MaxAttempts; i++)
+            for (int i = 0; i < config.MaxAttempts; i++)
             {
                 DateTime dateAttempted = DateTime.Now;
                 try
-                {   
+                {
                     smtpClient.Send(outgoingMessage);
                     DateTime dateSent = DateTime.Now;
                     sendResult.Attempts.Add(new SendAttempt()
@@ -106,7 +104,7 @@ namespace MoMail
                     sendResult.DateSent = dateSent;
                     return sendResult;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     sendResult.Attempts.Add(new SendAttempt()
                     {
@@ -121,7 +119,7 @@ namespace MoMail
 
             sendResult.ErrorNote = "Failure to send all emails.";
             return sendResult;
-        }        
+        }
 
         public SmtpClient GetSmtpClient()
         {
